@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "zip -r skill.zip .",
-    "download": "./bin/download.js"
+    "build": "zip -r skill.zip . -x *.git*",
+    "download": "./bin/download.js",
+    "full-build": "npm run download && npm run build"
   },
   "keywords": [],
   "author": "",
