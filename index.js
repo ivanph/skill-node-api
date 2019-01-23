@@ -3,6 +3,7 @@ const striptags = require('striptags');
 const corePath = './core/';
 const APP_ID = '';
 const get = require('lodash.get');
+const repromptMessage = 'Welcome to the NodeJS API skill. You can say things like, what\'s the buffer?';
 
 function getDefinition (method) {
   let definition = '';
@@ -31,7 +32,7 @@ const handlers = {
     this.emit(':tell', 'A definition for ' + method + ' could not be found');
   },
   'Unhandled': function () {
-    this.emit(':tell', 'Welcome to the NodeJS API skill');
+    this.emit(':ask', repromptMessage, repromptMessage);
   }
 };
 
