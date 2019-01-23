@@ -4,6 +4,8 @@ const corePath = './core/';
 const APP_ID = '';
 const get = require('lodash.get');
 const repromptMessage = 'Welcome to the NodeJS API skill. You can say things like, what\'s the buffer?';
+const helpMessage = 'You can say things like, tell me about cluster, or, what is the console?';
+const unhandledMessage = 'I did not get that. You can say things like, Tel me about O. S. ?';
 
 function getDefinition (method) {
   let definition = '';
@@ -18,6 +20,12 @@ function getDefinition (method) {
 }
 
 const handlers = {
+  'LaunchRequest': function () {
+    this.emit(':ask', repromptMessage, repromptMessage);
+  },
+  'AMAZON.HelpIntent': function () {
+    this.emit(':ask', helpMessage, helpMessage);
+  },
   'apiMethodDefinition': function () {
     const method = get(this, 'event.request.intent.slots.apimethod.value', '');
     if (!method.length) {
@@ -31,17 +39,20 @@ const handlers = {
     }
     this.emit(':tell', 'A definition for ' + method + ' could not be found');
   },
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Good bye');
+  },
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Good bye');
+  },
   'Unhandled': function () {
-    this.emit(':ask', repromptMessage, repromptMessage);
+    this.emit(':ask', unhandledMessage, unhandledMessage);
   }
 };
 
 exports.handler = function (event, context, callback) {
   const alexa = Alexa.handler(event, context, callback);
   alexa.APP_ID = APP_ID;
-  if (typeof process.env.DEBUG === 'undefined') {
-    alexa.APP_ID = '...';
-  }
   alexa.registerHandlers(handlers);
   alexa.execute();
 };
